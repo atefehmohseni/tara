@@ -3,13 +3,12 @@ pragma solidity ^0.5.0;
 ///@title User Management Contract
 ///@notice Manage user's signup and profile information
 ///@dev store and update regular account and business account information
-contract UserManagemet {
+contract UserManagement {
     
     ///@notice general user information
     ///@dev basic user information common among all accounts
     struct User {
-        bytes32 userName;
-        bytes32 password;
+        string userName;
         string userEmail;
         bytes32 userID;
         uint userBirthDate;
@@ -19,32 +18,54 @@ contract UserManagemet {
     }
 
     struct BusinessUserData {
-        bytes32 companyName;
+        string companyName;
         string companyDescription;
     }
 
-    ///@dev map business user's IDs to their business info
-    mapping (bytes32 => BusinessUserData) businessInfo;
+    ///@dev map business user's address to their business info
+    mapping (address => BusinessUserData) public businessInfo;
 
-    //@dev map user emails to their signup info
-    mapping (bytes32 => User) users;
+    //@dev map user address to their signup info
+    mapping (address => User) public users;
+
+    event newSignUP(string _username, bytes32 _userID);
+    event failedSignUp(string _email);
+    event newBusinessSignUp(string _companyname);
+
 
     /// constructor!
     // constructor () public{
     // }
 
-    modifier verifiedSignUpInfo(string memory _email)
-    {
-        require(users[keccak256(abi.encode(_email))].activateAccount == false);
-          //ToDo emit failed signup
-        _;
-    }
+    // modifier verifiedSignUpInfo(string memory _email)
+    // {
+    //     require(users[msg.sender].activateAccount == false);
+    //     _;
+    // }
 
-    function userSignUp(bytes32 _name, bytes32 _password, string memory _email, uint _dob, address _wallet) 
-    public verifiedSignUpInfo(_email) 
+    function userSignUp(string memory _name, string memory _email, uint _dob, address _wallet) 
+    public 
     {
-        bytes32 userID = keccak256(abi.encode(_email));
-        users[userID] = User(_name,_password, _email,userID,_dob,_wallet,true,false);
+        if (users[msg.sender].activateAccount)
+        {
+            emit failedSignUp(_email);
+        }
+        else {
+            bytes32 userID = keccak256(abi.encode(_email));
+            users[_wallet] = User(_name, _email,userID,_dob,_wallet,true,false);
+            emit newSignUP(_name, userID);
+        }
     }
-
+    
+    //@notice signup business users
+    //@dev add business info to an already registered user
+    function businessSignUp (string memory _companyname, string memory _companydescription)
+    public
+    {   
+        // users first should signup regularly 
+        require(users[msg.sender].activateAccount);
+        users[msg.sender].businessAccount = true;
+        businessInfo[msg.sender] = BusinessUserData(_companyname, _companydescription);
+        emit newBusinessSignUp(_companyname);
+    }
 }

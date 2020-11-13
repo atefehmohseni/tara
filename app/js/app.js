@@ -1,6 +1,3 @@
-// import Login from "./components/login.component";
-// import SignUp from "./components/signup.component";
-
 App = {
   web3Provider: null,
   contracts: {},
@@ -20,11 +17,11 @@ App = {
   },
   
   initContract: function() {
-    $.getJSON("UserManagemet.json", function(usermanagement) {
+    $.getJSON("UserManagement.json", function(usermanagement) {
       // Instantiate a new truffle contract from the artifact
-      App.contracts.UserManagemet = TruffleContract(usermanagement);
+      App.contracts.UserManagement = TruffleContract(usermanagement);
       // Connect provider to interact with contract
-      App.contracts.UserManagemet.setProvider(App.web3Provider);
+      App.contracts.UserManagement.setProvider(App.web3Provider);
 
       App.listenForEvents();
 
@@ -33,7 +30,7 @@ App = {
   },
 
   listenForEvents: function() {
-    // App.contracts.UserManagemet.deployed().then(function(instance) {
+    // App.contracts.UserManagement.deployed().then(function(instance) {
     //   // Restart Chrome if you are unable to receive this event
     //   // This is a known issue with Metamask
     //   // https://github.com/MetaMask/metamask-extension/issues/2393
@@ -60,7 +57,24 @@ App = {
     web3.eth.getCoinbase(function(err, account) {
       if (err === null) {
         App.account = account;
-        $("#accountAddress").html("Your Account: " + account);
+
+        // check if the user has already registered
+        App.contracts.UserManagement.deployed().then(function(instance) {
+          return instance.users[account[0]];
+        }).then(function(result) {
+         if(result)
+         {
+            $("#accountAddress").html("Welcome " + result);
+            $("#signupbtn").hide();
+         }
+         else {
+          $("#accountAddress").html("account " + account);
+
+         }
+        }).catch(function(err) {
+          console.error(err);
+        });
+
       }
     });
     loader.hide();
@@ -120,10 +134,27 @@ App = {
     var password = $("#pwd").val();
     var email = $("#email").val();
     var dob = alert($("#dob").val());
-    
 
-    App.contracts.UserManagemet.deployed().then(function(instance) {
-      return instance.userSignUp(username, password, email, dob, App.account, { from: App.account });
+      App.contracts.UserManagement.deployed().then(function(instance) {
+        return instance.userSignUp(username, password, email, dob, App.account, { from: App.account });
+      }).then(function(result) {
+        // Wait for user list to update
+        $("#content").hide();
+        $("#loader").show();
+      }).catch(function(err) {
+        console.error(err);
+      });
+  },
+
+  handleBusinessSignup: function(event) {
+    $("#compname").show();
+    $("#compdesc").show();
+
+    var businessname = $("#companyname");
+    var businessdesc = $("#companydescription");
+
+    App.contracts.UserManagement.deployed().then(function(instance) {
+      return instance.businessSignUp(businessname, businessdesc, { from: App.account });
     }).then(function(result) {
       // Wait for user list to update
       $("#content").hide();
@@ -131,7 +162,7 @@ App = {
     }).catch(function(err) {
       console.error(err);
     });
-  }
+  },
 
 };
 

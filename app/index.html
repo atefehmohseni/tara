@@ -21,7 +21,7 @@
     <div class="container" style="width: 650px;">
       <div class="row">
         <div class="col-lg-12">
-          <h1 class="text-center">Tara a place to Share your photos.</h1>
+          <h1 class="text-center">Tara a place to share your photos.</h1>
           <button id="signupbtn" onclick="App.renderSignup();return false;">Start here!</button>
           <hr/>
           <br/>
@@ -52,6 +52,22 @@
                 <label>Password</label>
                 <input type="password" className="form-control" placeholder="Enter password" id="pwd" />
             </div>
+
+            <label class="switch">
+              <input type="checkbox" onclick="App.handleBusinessSignup();" /> Business Account 
+            </label>
+            <br>
+            
+            <div className="form-group" id="compname" hidden=true>
+              <label>Company name</label>
+              <input type="text" className="form-control" placeholder="Company name" id="companyname"/>
+          </div>
+
+          <div className="form-group" id="compdesc" hidden=true>
+              <label>Company Description</label>
+              <textarea id="companydescription"> </textarea>
+          </div>
+
 
             <button type="submit" className="btn btn-dark btn-lg btn-block" onclick="App.handleSignup();">Register</button>
             <!-- <p className="forgot-password text-right">
