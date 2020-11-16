@@ -11,7 +11,6 @@ contract UserManagement {
         string userName;
         string userEmail;
         bytes32 userID;
-        uint userBirthDate;
         address userWalletAddress;
         bool activateAccount;
         bool businessAccount;
@@ -28,10 +27,9 @@ contract UserManagement {
     //@dev map user address to their signup info
     mapping (address => User) public users;
 
-    event newSignUP(string _username, bytes32 _userID);
+    event newSignUP(address indexed _useraddress, bytes32 _userID);
     event failedSignUp(string _email);
     event newBusinessSignUp(string _companyname);
-
 
     /// constructor!
     // constructor () public{
@@ -43,7 +41,7 @@ contract UserManagement {
     //     _;
     // }
 
-    function userSignUp(string memory _name, string memory _email, uint _dob, address _wallet) 
+    function userSignUp(string memory _name, string memory _email, address _wallet) 
     public 
     {
         if (users[msg.sender].activateAccount)
@@ -52,8 +50,8 @@ contract UserManagement {
         }
         else {
             bytes32 userID = keccak256(abi.encode(_email));
-            users[_wallet] = User(_name, _email,userID,_dob,_wallet,true,false);
-            emit newSignUP(_name, userID);
+            users[_wallet] = User(_name, _email,userID,_wallet,true,false);
+            emit newSignUP(_wallet, userID);
         }
     }
     

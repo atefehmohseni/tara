@@ -42,17 +42,16 @@ contract("usrmngmnt", function(accounts) {
         
         var username = "testuser";
         var email = "test@email.com";
-        var dob = 736453793;
         var userID = keccak256(email);
 
-        return usrmngmntInstance.userSignUp(username, email, dob, accounts[0], { from: accounts[0] });
+        return usrmngmntInstance.userSignUp(username, email, accounts[0], { from: accounts[0] });
       }).then(function(receipt) {
           var username = "testuser";
           // var userID = keccak256("test@email.com");
 
           assert.equal(receipt.logs.length, 1, "an event was triggered");
           assert.equal(receipt.logs[0].event, "newSignUP", "the event type is correct");
-          assert.equal(receipt.logs[0].args._username, username, "the user name is correct");
+          assert.equal(receipt.logs[0].args._useraddress, accounts[0], "the user name is correct");
           // assert.equal(receipt.logs[0].args._userID, userID, "the user ID is correct");
           
           return usrmngmntInstance.users(accounts[0])})
@@ -60,9 +59,8 @@ contract("usrmngmnt", function(accounts) {
           assert(newuser, "the user has been added to the list of users");
           assert.equal(newuser[0], "testuser", "the user name is valid");
           assert.equal(newuser[1], "test@email.com", "the user email is valid");
-          assert.equal(newuser[3].toNumber(), 736453793, "the user dateofbirth is valid");
-          assert.equal(newuser[5], true, "the user has been activated");
-          assert.equal(newuser[6], false, "all new users defined as regular account (not business account)");
+          assert.equal(newuser[4], true, "the user has been activated");
+          assert.equal(newuser[5], false, "all new users defined as regular account (not business account)");
       })
     });
 
@@ -73,10 +71,9 @@ contract("usrmngmnt", function(accounts) {
         
         var username = "testuser";
         var email = "test@email.com";
-        var dob = 736453793;
         var userID = keccak256(email);
 
-        return usrmngmntInstance.userSignUp(username, email, dob, accounts[0], { from: accounts[0] });
+        return usrmngmntInstance.userSignUp(username, email, accounts[0], { from: accounts[0] });
       }).then(function(receipt) {
         var email = "test@email.com";
 
@@ -118,7 +115,7 @@ contract("usrmngmnt", function(accounts) {
 
       return usrmngmntInstance.users(accounts[0])
     }).then(function(upgradeduser) {
-      assert.equal(upgradeduser[6], true, "verified upgraded user account to a business account");
+      assert.equal(upgradeduser[5], true, "verified upgraded user account to a business account");
         
     })
   });
