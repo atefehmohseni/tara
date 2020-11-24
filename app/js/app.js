@@ -16,6 +16,7 @@ App = {
     return App.initContract();
   },
   
+  
   initContract: function() {
     $.getJSON("UserManagement.json", function(usermanagement) {
       // Instantiate a new truffle contract from the artifact
@@ -126,6 +127,32 @@ App = {
 
       $("#profile").load("profile.html");
   },
+
+  captureFile: function(event) {
+    event.preventDefault()
+    const file = event.target.files[0]
+    const reader = new window.FileReader()
+    reader.readAsArrayBuffer(file)
+    reader.onloadend = () => {
+      this.setState({ buffer: Buffer(reader.result) })
+      console.log('buffer', this.state.buffer)
+    }
+  },
+
+  onSubmit: function(event) {
+    event.preventDefault()
+    ipfs.files.add(this.state.buffer, (error, result) => {
+      if(error) {
+        console.error(error)
+        return
+      }
+      this.PhotoMarketplace.addPhoto(result[0].hash, { from: this.state.account }).then((r) => {
+        return this.setState({ ipfsHash: result[0].hash })
+        console.log('ifpsHash', this.state.ipfsHash)
+      })
+    })
+  },
+
 
 };
 

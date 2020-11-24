@@ -53,8 +53,27 @@ https://templatemo.com/tm-518-sentra
                         <a href="#top">
                             <span class="rect"></span>
                             <span class="circle"></span>
-                            Home
-                        </a>
+                            Upload your picture
+                            <h1>Your Image</h1>
+                            <p>This image is stored on IPFS & The Ethereum Blockchain!</p>
+                            
+                            <img id="image" src="" alt=""/>
+                            
+                            <h2>Upload Image</h2>
+                            <form onSubmit={this.onSubmit}>                                
+                                <input type="text" className="form-control" placeholder="photo title" id="phototitle"/>
+                                <div className="form-group" id="photodesc" hidden=true>
+                                    <label>Photo Description</label>
+                                    <textarea id="photodescdescription"> </textarea>
+                                </div>
+                                <input type="text" className="form-control" placeholder="photo price" id="photoprice"/>
+
+                                <input type='file' onChange={App.captureFile} />
+                              <input type='submit' />
+                            </form>
+
+                        <input type="file" onChange={uploadFile} />
+
                     </li>
                     <li>
                         <a href="#featured">
