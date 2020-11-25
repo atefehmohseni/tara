@@ -23,7 +23,7 @@
     crossorigin="anonymous"></script>
 
     <script type="text/JavaScript">
-        function ipfsUpload() {
+        function loadImage() {
             const reader = new FileReader();
             reader.onloadend = function() {
                 const ipfs = window.IpfsApi('127.0.0.1', 5001) ;// Connect to IPFS
@@ -35,19 +35,26 @@
                 }
                 let url = `https://ipfs.io/ipfs/${result[0].hash}`;
                 console.log(`Url --> ${url}`);
-                document.getElementById("url").innerHTML= url;
-                document.getElementById("url").href= url;
+                document.getElementById("url").innerHTML = result[0].hash;
                 document.getElementById("output").src = url;
-
-                App.addPhoto(result[0].hash);
                 })
             }
             const photo = document.getElementById("photo");
             reader.readAsArrayBuffer(photo.files[0]); // Read Provided File
         }
+
+        function ipfsUpload(event) {
+          event.preventDefault();
+
+          const url = document.getElementById("url").innerHTML ;
+          
+          App.addPhoto(url);
+          
+
+        }
        
     </script>
-    
+
   </head>
   <body>
     <div class="container" style="width: 650px;">
@@ -112,22 +119,22 @@
           <form action="/">        
               <fieldset>                        
               <input type="text" className="form-control" placeholder="photo title" id="phototitle"/>
-              <div className="form-group" id="photodesc" hidden=true>
+              <div className="form-group" id="photodesc">
                   <label>Photo Description</label>
                   <textarea id="photodescdescription"> </textarea>
               </div>
               <input type="text" className="form-control" placeholder="photo price" id="photoprice"/>
 
-              <input type='file' onchange="ipfsUpload();" id="photo"/>
-
-              <input type='submit' />
+              <input type='file' onchange="loadImage();" id="photo" accept="image/*"/>
+              
+              <input type='submit' onclick="ipfsUpload(event);" onsubmit="return false;" />
 
               </fieldset>
           </form>
-          <a id="url"></a>
+          <div id="url" hidden=true></div>
           </br>
           </br>
-          <img id="output">
+          <img id="output" width="700" height="500">
       </ul>
     </div>
 

@@ -58,6 +58,12 @@ contract PhotoMarketplace {
 
     }
 
+    //@notice business users add new photo request and the price they are willing to pay
+    //@dev this function let business users to add they photography requests
+    function addPhotoRequest(type name) {
+        
+    }
+
     function checkBuyerBalance(bytes32 _photoID)
     public
     {

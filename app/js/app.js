@@ -133,13 +133,11 @@ App = {
     }).then(function(result) {
       // Wait for photo to added to blockchain
       $("#content").hide();
-      $("#loader").show();
+     // $("#loader").show();
     }).catch(function(err) {
-      console.log("FUCK It");
       console.error(err);
     });
-  }
-
+  },
 };
 
 $(function() {
