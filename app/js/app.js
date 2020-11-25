@@ -35,7 +35,7 @@ App = {
       //Instantiate the photo marketplace contract
       App.contracts.PhotoMarketplace = TruffleContract(marketplace);
       App.contracts.PhotoMarketplace.setProvider(App.web3Provider);
-  });
+    });
     return App.render();
   },
 
@@ -117,16 +117,17 @@ App = {
   renderProfile: function(event){
       var content = $("#content");
       content.hide();
-
-      $("#profile").load("profile.html");
+      
+      //window.location.replace("profile.html");
+      //window.location.href = "profile.html";
+      $("#profile").show();
   },
 
-  addPhoto: function(url) {
-    var photoname = $("#phototitle");
-    var description = $("#photodesc");
-    var price = $("#photoprice");
-    console.log("HELLOOOO");
-    console.log(App.contracts);
+  addPhoto: function(url, title, desc, price){
+    var photoname = $("#phototitle").val();
+    var description = $("#photodesc").val();
+    var price = $("#photoprice").val();
+
     App.contracts.PhotoMarketplace.deployed().then(function(instance) {
       return instance.addPhoto(url, photoname, description, price, { from: App.account });
     }).then(function(result) {
@@ -134,9 +135,10 @@ App = {
       $("#content").hide();
       $("#loader").show();
     }).catch(function(err) {
+      console.log("FUCK It");
       console.error(err);
     });
-  },
+  }
 
 };
 

@@ -16,6 +16,38 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    
+    <script src="https://wzrd.in/standalone/buffer"></script>
+    <script src="https://unpkg.com/ipfs-api@9.0.0/dist/index.js"
+    integrity="sha384-5bXRcW9kyxxnSMbOoHzraqa7Z0PQWIao+cgeg327zit1hz5LZCEbIMx/LWKPReuB"
+    crossorigin="anonymous"></script>
+
+    <script type="text/JavaScript">
+        function ipfsUpload() {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const ipfs = window.IpfsApi('127.0.0.1', 5001) ;// Connect to IPFS
+                const buf = buffer.Buffer(reader.result); // Convert data into buffer
+                ipfs.files.add(buf, (err, result) => { // Upload buffer to IPFS
+                if(err) {
+                    console.error(err);
+                    return
+                }
+                let url = `https://ipfs.io/ipfs/${result[0].hash}`;
+                console.log(`Url --> ${url}`);
+                document.getElementById("url").innerHTML= url;
+                document.getElementById("url").href= url;
+                document.getElementById("output").src = url;
+
+                App.addPhoto(result[0].hash);
+                })
+            }
+            const photo = document.getElementById("photo");
+            reader.readAsArrayBuffer(photo.files[0]); // Read Provided File
+        }
+       
+    </script>
+    
   </head>
   <body>
     <div class="container" style="width: 650px;">
@@ -66,7 +98,38 @@
             </p> -->
         </form>
         
-        <div id="profile"></div>
+        <div id="profile" hidden=true>
+        <ul>
+          <span class="rect"></span>
+          <span class="circle"></span>
+          <h1>Recent Images</h1>
+          <p>This image is stored on IPFS & The Ethereum Blockchain!</p>
+          
+          <img id="image" src="" alt=""/>
+          
+          <h2>Upload New Image</h2>
+
+          <form action="/">        
+              <fieldset>                        
+              <input type="text" className="form-control" placeholder="photo title" id="phototitle"/>
+              <div className="form-group" id="photodesc" hidden=true>
+                  <label>Photo Description</label>
+                  <textarea id="photodescdescription"> </textarea>
+              </div>
+              <input type="text" className="form-control" placeholder="photo price" id="photoprice"/>
+
+              <input type='file' onchange="ipfsUpload();" id="photo"/>
+
+              <input type='submit' />
+
+              </fieldset>
+          </form>
+          <a id="url"></a>
+          </br>
+          </br>
+          <img id="output">
+      </ul>
+    </div>
 
 
           <div id="content" style="display: none;">
