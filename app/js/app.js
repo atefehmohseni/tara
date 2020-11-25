@@ -1,6 +1,12 @@
 App = {
   web3Provider: null,
   contracts: {},
+  
+  state : {
+    ipfsHash: '',
+    buffer: null,
+    account: null
+  },
 
   init: function() {
     // TODO: refactor conditional
@@ -24,28 +30,15 @@ App = {
       // Connect provider to interact with contract
       App.contracts.UserManagement.setProvider(App.web3Provider);
 
-      App.listenForEvents();
-
-      return App.render();
     });
+    $.getJSON("PhotoMarketplace.json", function(marketplace) {
+      //Instantiate the photo marketplace contract
+      App.contracts.PhotoMarketplace = TruffleContract(marketplace);
+      App.contracts.PhotoMarketplace.setProvider(App.web3Provider);
+  });
+    return App.render();
   },
 
-  listenForEvents: function() {
-    // App.contracts.UserManagement.deployed().then(function(instance) {
-    //   // Restart Chrome if you are unable to receive this event
-    //   // This is a known issue with Metamask
-    //   // https://github.com/MetaMask/metamask-extension/issues/2393
-    //   instance.newBidEvent({}, {
-    //     fromBlock: 0,
-    //     toBlock: 'latest'
-    //   }).watch(function(error, event) {
-    //     console.log("event triggered", event)
-    //     // Reload when a new vote is recorded
-    //     App.render();
-    //   });
-    // });
-  },
-  
   render: function() {
     var electionInstance;
     var loader = $("#loader");
@@ -128,31 +121,22 @@ App = {
       $("#profile").load("profile.html");
   },
 
-  captureFile: function(event) {
-    event.preventDefault()
-    const file = event.target.files[0]
-    const reader = new window.FileReader()
-    reader.readAsArrayBuffer(file)
-    reader.onloadend = () => {
-      this.setState({ buffer: Buffer(reader.result) })
-      console.log('buffer', this.state.buffer)
-    }
+  addPhoto: function(url) {
+    var photoname = $("#phototitle");
+    var description = $("#photodesc");
+    var price = $("#photoprice");
+    console.log("HELLOOOO");
+    console.log(App.contracts);
+    App.contracts.PhotoMarketplace.deployed().then(function(instance) {
+      return instance.addPhoto(url, photoname, description, price, { from: App.account });
+    }).then(function(result) {
+      // Wait for photo to added to blockchain
+      $("#content").hide();
+      $("#loader").show();
+    }).catch(function(err) {
+      console.error(err);
+    });
   },
-
-  onSubmit: function(event) {
-    event.preventDefault()
-    ipfs.files.add(this.state.buffer, (error, result) => {
-      if(error) {
-        console.error(error)
-        return
-      }
-      this.PhotoMarketplace.addPhoto(result[0].hash, { from: this.state.account }).then((r) => {
-        return this.setState({ ipfsHash: result[0].hash })
-        console.log('ifpsHash', this.state.ipfsHash)
-      })
-    })
-  },
-
 
 };
 
