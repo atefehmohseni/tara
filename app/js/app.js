@@ -91,7 +91,7 @@ App = {
             var url = `https://ipfs.io/ipfs/${request[1]}`;
             var price = request[3];
   
-            requestTemplate +=  "<th> <img width='200' height='200' src="+ url +" alt=''/> <td>"+price+"</td></th>";
+            requestTemplate +=  "<th><div position='relative'> <img position='absolute' width='200' height='200' src="+ url +" alt=''/> <img width='25' height='25' src='images/money.jpg'/>"+price+"</td></div></th>";
             section.append(requestTemplate);
             requestTemplate = "";
           });
@@ -111,18 +111,20 @@ App = {
     }).then(function(photoCounter) {      
       var requestTemplate = "";
       var rowcounter=0;
+
       for (var i = 1; i <= photoCounter; i++){
           marketplace.photos(i).then(function(photo) {
           var url = `https://ipfs.io/ipfs/${photo[0]}`;
           var price = photo[5];
-          requestTemplate +=  "<th> <img width='300' height='200' src="+ url +" alt=''/> <td>"+price+"</td></th>";
+          
+          requestTemplate += "<th><div position='relative'> <img position='absolute' width='300' height='200' src="+ url +" alt=''/> <img width='25' height='25' src='images/money.jpg'/>"+price+"</td></div></th>";
+        
           section.append(requestTemplate);
           requestTemplate = "";
           
           rowcounter +=1;
           if (rowcounter % 3 == 0)
             section.append("<tr ></tr>");
-          
         });
     }// end for
     }).catch(function(err) {
