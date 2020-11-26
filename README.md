@@ -24,7 +24,7 @@ Tara is a photo sharing application for photographers who love pitch their photo
 
 ### Setup
 
-- Clone the repo using git clone `https://github.com/atefehmohseni/tara.git`
+- Clone the repo using git clone (https://github.com/atefehmohseni/tara.git)
 - `cd tara` 
 - Have a local blockchain running on port 8545 (e.g. using [Ganache](https://www.trufflesuite.com/ganache))
 - Have a local [IPFS](https://docs.ipfs.io/install/) daemon running on port 5001
@@ -43,4 +43,4 @@ You can run the tests by running `truffle test` from the main directory
 
 ## 🚀  Future Goals & TODOs
 
-Refer to the projects in this repository!
+Check out our Scrum board [here](https://github.com/atefehmohseni/tara/projects/1)
