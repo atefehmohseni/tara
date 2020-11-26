@@ -49,8 +49,40 @@
           const url = document.getElementById("url").innerHTML ;
           
           App.addPhoto(url);
-          
+        }
 
+        function loadImage2() {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const ipfs = window.IpfsApi('127.0.0.1', 5001) ;// Connect to IPFS
+                const buf = buffer.Buffer(reader.result); // Convert data into buffer
+                ipfs.files.add(buf, (err, result) => { // Upload buffer to IPFS
+                if(err) {
+                    console.error(err);
+                    return
+                }
+                if (result[0].hash){
+                  let url = `https://ipfs.io/ipfs/${result[0].hash}`;
+                  console.log(`Url --> ${url}`);
+                  document.getElementById("url2").innerHTML = result[0].hash;
+                  document.getElementById("output2").src = url;
+                }
+                else {
+                  alert("Oops! a problem occured in uploading your image!");
+                }
+                })
+            }
+            const photo = document.getElementById("photo2");
+            reader.readAsArrayBuffer(photo.files[0]); // Read Provided File
+        }
+
+        function addPhotoshootingRequest(event) {
+          event.preventDefault();
+          const url = document.getElementById("url2").innerHTML;
+          if (url)
+            App.addPhotographyRequest(url);
+          else
+            console.log("CANt add your new request");
         }
        
     </script>
@@ -60,9 +92,12 @@
     <div class="container" style="width: 650px;">
       <div class="row">
         <div class="col-lg-12">
-          <h1 class="text-center">Tara a place to share your photos.</h1>
-          <button id="accountAddress" class="text-center" onclick="App.renderProfile(); return false;"></button>
+          <h1 class="text-center">Tara: what photographers love!</h1>
+          <input type="button" onclick="location.href='./'" value="Home" />
+          <button id="accountAddress" class="text-center" hidden=true onclick="App.renderProfile(); return false;"></button>
           <button id="signupbtn" onclick="App.renderSignup()">Start here!</button>
+          <button id="photographyrequest" onclick="App.renderProfile();"> Pitch photos!</button>
+          <button id="photographyrequest" onclick="App.renderBusinessProfile()"> Challenge Photographers!</button>
           <hr/>
           <br/>
           <div id="loader">      
@@ -84,7 +119,7 @@
             </div>
 
             <label class="switch">
-              <input type="checkbox" onclick="App.handleBusinessSignup();" /> Business Account 
+              <input type="checkbox" onclick="App.showBusinessAccountField();" id="businessCheck"/> Business Account 
             </label>
             <br>
             
@@ -109,21 +144,17 @@
         <ul>
           <span class="rect"></span>
           <span class="circle"></span>
-          <h1>Recent Images</h1>
-          <p>This image is stored on IPFS & The Ethereum Blockchain!</p>
-          
-          <img id="image" src="" alt=""/>
-          
+               
           <h2>Upload New Image</h2>
 
           <form action="/">        
               <fieldset>                        
-              <input type="text" className="form-control" placeholder="photo title" id="phototitle"/>
+                <label>Photo Title </label>  <input type="text" className="form-control" placeholder="photo title" id="phototitle"/>
               <div className="form-group" id="photodesc">
                   <label>Photo Description</label>
                   <textarea id="photodescdescription"> </textarea>
               </div>
-              <input type="text" className="form-control" placeholder="photo price" id="photoprice"/>
+              <label>Photo Price</label>  <input type="text" className="form-control" placeholder="photo price" id="photoprice"/>
 
               <input type='file' onchange="loadImage();" id="photo" accept="image/*"/>
               
@@ -131,39 +162,77 @@
 
               </fieldset>
           </form>
-          <div id="url" hidden=true></div>
+          <div id="url2" hidden=true></div>
           </br>
           </br>
           <img id="output" width="700" height="500">
       </ul>
     </div>
 
+    <div id="photographyRequest" hidden=true>
+      <ul>
+        <span class="rect"></span>
+        <span class="circle"></span>
+             
+        <h2>Upload New Photoshooting Request!</h2>
 
-          <div id="content" style="display: none;">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Votes</th>
-                </tr>
-              </thead>
-              <tbody id="candidatesResults">
-              </tbody>
-            </table>
-            <hr/>
-           
-          </div>
+        <form action="/">        
+            <fieldset>                        
+            <div className="form-group">
+                <label>Photo Description</label>
+                <textarea id="photoshootingdesc"> </textarea>
+            </div>
+            <label>Estimated Price</label>  <input type="text" className="form-control" placeholder="price" id="photoshootingprice"/>
+
+            <input type='file' onchange="loadImage2();" id="photo2" accept="image/*"/>
+            
+            <input type='submit' onclick="addPhotoshootingRequest(event);" onsubmit="return false;" />
+
+            </fieldset>
+        </form>
+        <div id="url" hidden=true></div>
+        </br>
+        </br>
+        <img id="output2" border-radius="50%">
+    </ul>
+  </div>
+
+        <div id="content" style="display: none;">
+          <h1>Photo Shooting Opportunities</h1>
+          <table class="table" id="photoshooting" border-collapse='separate' >
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody id="photorequests">
+            </tbody>
+          </table>
+          <hr/>
+          <h1> Recent Photos</h1>
+
+          <table class="table" id="photos" border-collapse='separate'>
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+
+        </div>
         </div>
       </div>
     </div>
-    <ul class="social-icons">
-      <a href="#"><i class="fa fa-facebook"></i></a>
-     <a href="#"><i class="fa fa-twitter"></i></a>
-      <a href="#"><i class="fa fa-linkedin"></i></a>
-      <a href="#"><i class="fa fa-rss"></i></a>
-      <a href="#"><i class="fa fa-behance"></i></a>
-  </ul>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

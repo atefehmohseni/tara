@@ -3672,12 +3672,12 @@
         }
       },
       "links": {},
-      "address": "0x96301711cCF23Bc8e4749c5cebcded33127071b4",
-      "transactionHash": "0x2bb30bb549c466baad36e2d374f29cfc4a3ab9ba93b837c1f3d13f20e5640765"
+      "address": "0x0375281E8FD4b65C41E59B469DC358a40B7CFaf3",
+      "transactionHash": "0xbef82f65a543b8f2eaa2aee912a329c43f8b1c20659bd27fc5ecbdca1f7be35f"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-16T22:05:43.693Z",
+  "updatedAt": "2020-11-25T23:29:46.099Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "store and update regular account and business account information",

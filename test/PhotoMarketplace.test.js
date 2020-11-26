@@ -47,9 +47,37 @@ contract("marketplace", function(accounts) {
       assert.equal(newphoto[2], name, "the photo name is valid");
       assert.equal(newphoto[3], description, "the photo description is valid");
       assert.equal(newphoto[4], accounts[0], "photo owner address is correct");
+      assert.equal(newphoto[5], price, "photo price is correct");
+
     })
   });
 
+  // check out new photography request information
+  it("verify the new photography request information", function() {
+    return marketplace.deployed().then(function(instance) {
+      marketplaceInstance = instance;
+      return marketplaceInstance.addPhotographyRequest(url, description, price, {from: accounts[0]})
+    }).then(function(receipt) {
+          return marketplaceInstance.photographyRequests(0)
+      }).then(function(newrequest) {
+      assert(newrequest, "a photo has been added to the users album");
+      assert.equal(newrequest[1], url, "the request logo is valid");
+      assert.equal(newrequest[2], description, "the request description is valid");
+      assert.equal(newrequest[0], accounts[0], "photo owner address is correct");
+    })
+  });
+
+  //check new photography request event
+  it("verify the AddNewPhotographyRequest event", function() {
+    return marketplace.deployed().then(function(instance) {
+      marketplaceInstance = instance;
+
+      return marketplaceInstance.addPhotographyRequest(url, description, price, {from: accounts[0]});
+    }).then(function(receipt) {
+        assert.equal(receipt.logs.length, 1, "an event was triggered");
+        assert.equal(receipt.logs[0].event, "AddNewPhotographyRequest", "the event type is correct");
+      })
+    });
 
 });
 
