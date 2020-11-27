@@ -31,16 +31,6 @@ contract UserManagement {
     event failedSignUp(string _email);
     event newBusinessSignUp(string _companyname);
 
-    /// constructor!
-    // constructor () public{
-    // }
-
-    // modifier verifiedSignUpInfo(string memory _email)
-    // {
-    //     require(users[msg.sender].activateAccount == false);
-    //     _;
-    // }
-
     function userSignUp(string memory _name, string memory _email, address _wallet) 
     public 
     {

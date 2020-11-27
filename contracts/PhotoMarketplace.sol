@@ -21,6 +21,7 @@ contract PhotoMarketplace {
         string logo;// ipfs hash to the logo
         string description;
         uint price;
+        uint id;
     }
     // @notice a counter to keep number of photos
     // @ an identifier for photos
@@ -28,6 +29,9 @@ contract PhotoMarketplace {
     uint256 public photoCounter;
 
     uint256 public photographyRequestCounter;
+
+    //@dev Circuit Breaker flag
+    bool public stopped = false;
 
     //@notice keep track of all photos
     //@dev mapping from photoID to it's meta data
@@ -50,9 +54,33 @@ contract PhotoMarketplace {
     event AddNewPhotographyRequest(uint256 _reqID);
     event NotValidBuyer(uint _photoID);
     event SellPhoto(uint _photoID);
+    event StartEmergancyFreez();
 
+    address private owner;
+
+    modifier stopInEmergency { require(!stopped); _; }
+    modifier onlyOwner {require(msg.sender == owner); _;}
+
+    constructor()
+    public
+    {
+        owner = msg.sender;
+    }
+
+    function callForEmergancy()
+    private 
+    onlyOwner
+    {
+
+        if(msg.sender == owner)
+        {
+            stopped = true;
+            emit StartEmergancyFreez();
+        }
+    }
 
     function addPhoto(string memory _photourl, string memory _photoname, string memory _photoDesc, uint _photoPrice)
+    stopInEmergency
     public 
     {
         photoCounter += 1;
@@ -64,23 +92,17 @@ contract PhotoMarketplace {
        
     }
 
-    function deletePhoto(bytes32 _photoId)
-    public 
-    {
-
-    }
-
     //@notice business users add new photo request and the price they are willing to pay
     //@dev this function let business users to add they photography requests
     function addPhotographyRequest(string memory _logo, string memory _desc, uint _price)
+    stopInEmergency
     public
     {
         photographyRequestCounter += 1;
 
-        photographyRequests[photographyRequestCounter] = PhotographyRequest(msg.sender, _logo, _desc, _price);
+        photographyRequests[photographyRequestCounter] = PhotographyRequest(msg.sender, _logo, _desc, _price, photographyRequestCounter);
         
         emit AddNewPhotographyRequest(photographyRequestCounter);
-
     }
 
     function checkBuyer(uint _photoID) 
@@ -99,16 +121,17 @@ contract PhotoMarketplace {
     //@notice sell photos
     //@dev sell photo  = change the owner of a photo to a new address
     function sellPhoto(uint _photoID)
-    public
+    public payable stopInEmergency
+    returns (bool)
     {
-        if (checkBuyer(_photoID))
+        if (checkBuyer(_photoID)==true)
         {
-            //bool success = msg.sender.transfer(photos[_photoID].photoPrice);
-            (bool success, ) = msg.sender.call.value(photos[_photoID].photoPrice)("");
+            (bool success, ) = msg.sender.call.value((photos[_photoID].photoPrice)/10)("");
             require(success, "Transfer failed.");
-
             photos[_photoID].photoOwner = msg.sender;
             emit SellPhoto(_photoID);
+            return true;
         }
+        return false;
     }
 }

@@ -90,8 +90,11 @@ App = {
             marketplace.photographyRequests(i).then(function(request) {
             var url = `https://ipfs.io/ipfs/${request[1]}`;
             var price = request[3];
-  
-            requestTemplate +=  "<th><div position='relative'> <img position='absolute' width='200' height='200' src="+ url +" alt=''/> <img width='25' height='25' src='images/money.jpg'/>"+price+"</td></div></th>";
+            var requestID = request[4];
+            requestTemplate +=  "<th><div position='relative'> <img position='absolute' width='200' height='200' src="+ url +" alt=''/> \
+                                <button onclick=App.showDescription("+requestID+")> <img width='25' height='25' src='images/money.jpg'/>"+price+"</td></button>\
+                                </div></th>";
+
             section.append(requestTemplate);
             requestTemplate = "";
           });
@@ -239,12 +242,26 @@ App = {
   buyPhoto: function(photoID) {
     App.contracts.PhotoMarketplace.deployed().then(function (instance) {
       instance.sellPhoto(photoID).then(function(res) {
-       console.log("DOne with selling");
+          if (!res){
+            alert("You can't buy this photo!");
+          }
       }).catch(function(err) {
         console.error(err);
       });      
     });
   },
+
+  showDescription: function(requestID) {
+    App.contracts.PhotoMarketplace.deployed().then(function (instance) {
+      instance.photographyRequests(requestID,{ from: App.account }).then(function(request) {
+        console.log(request);
+        //TODO: add tooltip to show the description
+       // alert(request[2]);
+      }).catch(function(err) {
+        console.error(err);
+      });      
+    });
+  }
 
 };
 
