@@ -28,6 +28,7 @@ Tara is a photo sharing application for photographers who love pitch their photo
 - `cd tara` 
 - Have a local blockchain running on port 8545 (e.g. using [Ganache](https://www.trufflesuite.com/ganache))
 - Have a local [IPFS](https://docs.ipfs.io/install/) daemon running on port 5001
+- Run `truffle migrate --reset` 
 - Run `npm install` and then `npm run start`
 - Open up your browser and the project should be up on localhost:3000
 

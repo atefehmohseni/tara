@@ -116,8 +116,10 @@ App = {
           marketplace.photos(i).then(function(photo) {
           var url = `https://ipfs.io/ipfs/${photo[0]}`;
           var price = photo[5];
+          var photoID = photo[1];
           
-          requestTemplate += "<th><div position='relative'> <img position='absolute' width='300' height='200' src="+ url +" alt=''/> <img width='25' height='25' src='images/money.jpg'/>"+price+"</td></div></th>";
+          requestTemplate += "<th><div position='relative'> <img position='absolute' width='300' height='200' src="+ url +" alt=''/> \
+                              <button onclick=App.buyPhoto("+photoID+")> <img width='25' height='25' src='images/money.jpg'</div>"+price+"</td></button></div></th>";
         
           section.append(requestTemplate);
           requestTemplate = "";
@@ -127,10 +129,10 @@ App = {
             section.append("<tr ></tr>");
         });
     }// end for
+    
     }).catch(function(err) {
       console.error(err);
     });    
-    
   },
 
   renderSignup: function(event) {
@@ -232,12 +234,23 @@ App = {
       }).catch(function(err) {
         console.error(err);
       });
-
   },
+  
+  buyPhoto: function(photoID) {
+    App.contracts.PhotoMarketplace.deployed().then(function (instance) {
+      instance.sellPhoto(photoID).then(function(res) {
+       console.log("DOne with selling");
+      }).catch(function(err) {
+        console.error(err);
+      });      
+    });
+  },
+
 };
 
 $(function() {
   $(window).load(function() {
+    //ethereum.enable();
     App.init();
   });
 });

@@ -1,9 +1,8 @@
 pragma solidity ^0.5.0;
 
 import "./SafeMath.sol";
-import "./UserManagement.sol";
 
-contract PhotoMarketplace is UserManagement{
+contract PhotoMarketplace {
     //@notice information about each photo
     //@dev photo struct keeps the info about each photo
     struct Photo {
@@ -49,6 +48,9 @@ contract PhotoMarketplace is UserManagement{
     event AddNewPhoto(uint256 _photoID);
     event DenialSubmitRequest();
     event AddNewPhotographyRequest(uint256 _reqID);
+    event NotValidBuyer(uint _photoID);
+    event SellPhoto(uint _photoID);
+
 
     function addPhoto(string memory _photourl, string memory _photoname, string memory _photoDesc, uint _photoPrice)
     public 
@@ -81,17 +83,32 @@ contract PhotoMarketplace is UserManagement{
 
     }
 
-    function checkBuyerBalance(bytes32 _photoID)
+    function checkBuyer(uint _photoID) 
     public
+    returns (bool)
     {
-        
+        if (photos[_photoID].photoOwner != msg.sender &&
+            msg.sender.balance >= photos[_photoID].photoPrice)
+        {
+            return true;
+        }
+        emit NotValidBuyer(_photoID);
+        return false;
     }
 
     //@notice sell photos
     //@dev sell photo  = change the owner of a photo to a new address
-    function sellPhoto(bytes32 _photoID, address _newOwner)
+    function sellPhoto(uint _photoID)
     public
     {
+        if (checkBuyer(_photoID))
+        {
+            //bool success = msg.sender.transfer(photos[_photoID].photoPrice);
+            (bool success, ) = msg.sender.call.value(photos[_photoID].photoPrice)("");
+            require(success, "Transfer failed.");
 
+            photos[_photoID].photoOwner = msg.sender;
+            emit SellPhoto(_photoID);
+        }
     }
 }
