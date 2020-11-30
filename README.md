@@ -1,6 +1,8 @@
 # Tara
 Tara is a photo sharing application for photographers who love pitch their photos and for companies who are looking for specific photos!
 
+Watch a demo of Tara [here](https://www.youtube.com/watch?v=km3LSvjywWc)
+
 ## 📖 How to use Tara:
 - Sign up with your `name` and `email` address
 - Click on `Pitch Your Photos` to upload your pictures with a price set you want
