@@ -7638,15 +7638,22 @@
           ],
           "name": "SellPhoto",
           "type": "event"
+        },
+        "0xbfe7a92b8e4dc1d818f911187d7c197029dd7103908d1a2d0b21a24e07ad4b10": {
+          "anonymous": false,
+          "inputs": [],
+          "name": "StartEmergancyFreez",
+          "type": "event"
         }
       },
       "links": {},
-      "address": "0xac2408Dd18E3b55d35E0fA1Ed796c3A8cb0505eD",
-      "transactionHash": "0xe07e65eb360999ddd129c4667e618166fefc5ac6fa027deb7cb096f04a6c3d32"
+      "address": "0x1435e79f735aD3dEFd9e9980C1Cea6F2112DfB2c",
+      "transactionHash": "0x7992dca5608a13dee0d5fe0345a291aea3328668579979cbc517e3972f7b5772"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-27T05:06:19.382Z",
+  "updatedAt": "2020-11-27T05:35:50.916Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },

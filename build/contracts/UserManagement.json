@@ -3621,12 +3621,13 @@
         }
       },
       "links": {},
-      "address": "0x0CF090b0630491E4D31393282657c2a8e12E236E",
-      "transactionHash": "0xebda48626d4adbf42f368e3567e5fcfc6604988d9f90c546408d5d8089e59777"
+      "address": "0x03ff9dDF5725a1ef72aAefDB3C8569c3669945cb",
+      "transactionHash": "0x8cf2f9111a7090a846e827bc9be835c625d44bf680a4a1e558b4ae8b1252905b"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-27T04:57:20.710Z",
+  "updatedAt": "2020-11-27T05:35:50.696Z",
+  "networkType": "ethereum",
   "devdoc": {
     "details": "store and update regular account and business account information",
     "methods": {},

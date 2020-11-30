@@ -30,7 +30,7 @@ Tara is a photo sharing application for photographers who love pitch their photo
 - Have a local [IPFS](https://docs.ipfs.io/install/) daemon running on port 5001
 - Run `truffle migrate --reset` 
 - Run `npm install` and then `npm run start`
-- Open up your browser and the project should be up on localhost:3000
+- Open up your browser and the project should be up on localhost:3000 (if you can't see anything refresh the page a couple of times (2-3))
 
 ### Contract interaction on a local blockchain
 - Ensure your browser has a plugin (e.g. [Metamask](https://metamask.io/)) that allows you to interact with the Ethereum blockchain
