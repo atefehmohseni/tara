@@ -12,7 +12,7 @@ module.exports = {
     // NB: It's important to wrap the provider as a function.
     ropsten: {
       provider: function() {
-        return new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/bbf9728c20de4f98afad0c4412b08bf1`)
+        return new HDWalletProvider(mnemonic, `{PROVIDE-HERE}`)
       },
       host: "localhost",
       network_id: 3,       // Ropsten's id
